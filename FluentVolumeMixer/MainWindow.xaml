@@ -1,0 +1,165 @@
+﻿<Window x:Class="FluentVolumeMixer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        
+        xmlns:local="clr-namespace:FluentVolumeMixer"
+        xmlns:helpers="clr-namespace:FluentVolumeMixer.Helpers"
+        xmlns:uc="clr-namespace:FluentVolumeMixer.Controls"
+        
+        ShowInTaskbar="False"
+        Topmost="True"
+        Title="Mixer"
+        Height="408"
+        Width="520"
+        
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        
+        KeyDown="Window_KeyDown"
+        Deactivated="Window_Deactivated">
+
+    <Window.Resources>
+        <helpers:MicLevelAndMuteToGlyphConverter x:Key="MicConverter"/>
+    </Window.Resources>
+    
+    <Window.DataContext>
+        <local:ProcessModel/>
+    </Window.DataContext>
+
+    <Grid>
+
+        <Grid x:Name="MainGrid" Background="#01FFFFFF">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"
+                          PanningMode="Both"
+                          VerticalScrollBarVisibility="Auto" 
+                          HorizontalScrollBarVisibility="Auto"
+                          CanContentScroll="True">
+
+                <uc:AppListControl x:Name="AppListControl" />
+
+            </ScrollViewer>
+
+            <Grid Grid.Row="1">
+
+                <StackPanel HorizontalAlignment="Left" Margin="5" Orientation="Horizontal">
+
+                    <!--<uc:SplitButton Height="35" Width="70"/>-->
+                    <Button x:Name="BtnToggleMuteMic"
+                            Style="{StaticResource SearchBarButtonStyle}"
+                            Height="35" Width="35"
+                            Click="BtnToggleMuteMic_Click">
+                        <Button.Content>
+                            <MultiBinding Converter="{StaticResource MicConverter}">
+                                <Binding Path="InputMic.VolumeLevel" />
+                                <Binding Path="InputMic.IsMuted" />
+                            </MultiBinding>
+                        </Button.Content>
+                    </Button>
+
+                    <Slider x:Name="SldMicVolume"
+                            Margin="5,6,0,0"
+                            Width="180"
+                            Maximum="100"
+                            LargeChange="10"
+                            SmallChange="2"
+                            Value="{Binding InputMic.VolumeLevel}"/>
+                    
+                    <TextBlock x:Name="TbMicVolume"
+                               Text="{Binding InputMic.VolumeLevel}"
+                               Style="{StaticResource FluentTextBlock}"
+                               TextAlignment="Center"
+                               VerticalAlignment="Center"
+                               Margin="2,0,0,0"/>
+                    
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            Margin="5">
+
+                    <Button x:Name="btnInputDevices"
+                            Style="{StaticResource SearchBarButtonStyle}"
+                            Width="70"
+                            Height="35"
+                            Margin="5,0,0,0"
+                            IsTabStop="False"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Click="BtnInputDevices_Click">
+                        
+                        <Button.Content>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" FontFamily="Segoe MDL2 ASSETS" Text="&#xE720;" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="1" FontFamily="Segoe UI" Text="|" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="2" FontFamily="Segoe MDL2 ASSETS" Text="&#xE70E;" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            </Grid>
+                        </Button.Content>
+
+                        <Button.ContextMenu>
+                            <ContextMenu x:Name="inputDeviceMenu" />
+                        </Button.ContextMenu>
+
+                    </Button>
+
+                    <Button x:Name="btnOutputDevices"
+                            Style="{StaticResource SearchBarButtonStyle}"
+                            Width="70"
+                            Height="35"
+                            Margin="5,0,0,0"
+                            IsTabStop="False"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Click="BtnOutputDevices_Click">
+                        
+                        <Button.Content>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <TextBlock Grid.Column="0" FontFamily="Segoe MDL2 ASSETS" Text="&#xE7F6;"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" FontFamily="Segoe UI" Text="|" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="2" FontFamily="Segoe MDL2 ASSETS" Text="&#xE70E;"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Grid>
+                        </Button.Content>
+
+                        <Button.ContextMenu>
+                            <ContextMenu x:Name="outputDeviceMenu" />
+                        </Button.ContextMenu>
+
+                    </Button>
+
+                    <Button x:Name="MoreButton"
+                            Style="{StaticResource SearchBarButtonStyle}"
+                            Width="35"
+                            Height="35"
+                            Margin="5,0,0,0"
+                            IsTabStop="False"
+                            Content="&#xE713;"
+                            Click="MoreButton_Click"/>
+
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+    </Grid>
+    
+</Window>
